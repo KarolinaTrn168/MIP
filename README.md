@@ -1,0 +1,1 @@
+premenovavanie jednotlivych funkcii 
