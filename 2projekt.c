@@ -84,7 +84,7 @@ void vypisanie(autos *anfang)
 }
 
 
-autos *funkcia_p(autos *anfang, int *t)
+autos *pridanie(autos *anfang, int *t)
 {
 	int n; 
 	autos *akt;
@@ -266,7 +266,7 @@ int main()
 		{
 			case 'n': anfang = funkcia_n(&datei, anfang, freigeben, &t); freigeben=1; break;
 			case 'v': vypisanie(anfang); break;
-			case 'p': anfang = funkcia_p(anfang, &t); break;
+			case 'p': anfang = pridanie(anfang, &t); break;
 			case 'z': anfang = funkcia_z(anfang,&t); break;
 			case 'h': funkcia_h(anfang); break;
 		}
