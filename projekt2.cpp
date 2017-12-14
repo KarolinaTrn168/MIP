@@ -59,7 +59,7 @@ autos *funkcia_n(FILE**datei, autos *anfang, int freigeben, int *t)
 	return anfang; 
 }
 
-void funkcia_v(autos *anfang) 
+void vypisanie(autos *anfang) 
 {
 	int anzahl=1;
 	autos *akt;
@@ -265,7 +265,7 @@ int main()
 		switch(a=getchar())			
 		{
 			case 'n': anfang = funkcia_n(&datei, anfang, freigeben, &t); freigeben=1; break;
-			case 'v': funkcia_v(anfang); break;
+			case 'v': vypisanie(anfang); break;
 			case 'p': anfang = funkcia_p(anfang, &t); break;
 			case 'z': anfang = funkcia_z(anfang,&t); break;
 			case 'h': funkcia_h(anfang); break;
