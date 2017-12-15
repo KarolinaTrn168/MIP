@@ -22,18 +22,18 @@ auta *nacitanie(FILE**vstup, auta *prvy, int *pocet_zaznamov)
 	prvy=aktualny;
 	
 	*vstup=fopen("auta.txt", "r");
-	if(*vstup==NULL)
-	{
+   	  if(*vstup==NULL)
+	  {
 		printf("Zaznamy neboli nacitane \n");
-	}
+	  }
 	
-	else
-	{
-	//nacitavanie so suboru a ukladanie do struktur
-	  do
-	    {   	
+	  else
+	  {
+	 	 do
+	     {   	
 			if(znak=getc(*vstup)=='$')
-			znak=getc(*vstup);
+			  znak=getc(*vstup);
+			
 	    	fgets(aktualny->kategoria, 53, *vstup);
 	    	fgets(aktualny->znacka, 53, *vstup);
 	    	fgets(aktualny->predajca, 103, *vstup);
@@ -44,19 +44,16 @@ auta *nacitanie(FILE**vstup, auta *prvy, int *pocet_zaznamov)
 	    	aktualny->dalsi=(auta*)malloc(sizeof(auta));
 	    	aktualny=aktualny->dalsi;
 	    	aktualny->dalsi=NULL;
-	    	pocet++;  //pocitanie jednotlivych struktur
-	    		
-	    }
-	    while(!feof(*vstup));
-	    fclose(*vstup);
+	    	pocet++;  //pocitanie jednotlivych struktur		
+	     }
+	     while(!feof(*vstup));
+	       fclose(*vstup);
 	    
-	    aktualny=NULL;
-	    
-	    *pocet_zaznamov=pocet-1; 
-	    
-	printf("Nacitalo sa %d zaznamov \n", *pocet_zaznamov);
-	}
-	return prvy; 
+	     aktualny=NULL;
+	     *pocet_zaznamov=pocet-1; 
+       	printf("Nacitalo sa %d zaznamov \n", *pocet_zaznamov);
+	  }
+  return prvy; 
 }
 
 void vypisanie(auta *prvy) 
@@ -65,10 +62,10 @@ void vypisanie(auta *prvy)
 	auta *aktualny;
 	auta *dalsi;
 	aktualny=prvy;
-//vypis vsetkych struktur
-	while(aktualny->dalsi!=NULL)
+	
+	  while(aktualny->dalsi!=NULL)
 	    { 
-	printf("%d. \n", pocet);
+			printf("%d. \n", pocet);
 	    	printf("kategoria: %s", aktualny->kategoria);
 	    	printf("znacka: %s", aktualny->znacka);
 	    	printf("predajca: %s", aktualny->predajca);
@@ -76,24 +73,19 @@ void vypisanie(auta *prvy)
 	   		printf("rok_vyroby: %d\n", aktualny->rok_vyroby);
 	   		printf("stav_vozidla: %s", aktualny->stav_vozidla); 
 	   		
-	   	
-	    	
-	    	
 	    	aktualny=aktualny->dalsi;
 	    	pocet++; //pocitanie struktur
 	    }
-	    putchar('\n');
+	  putchar('\n');
 }
-
 
 auta *pridanie(auta *prvy, int *pocet_zaznamov)
 {
 	int pozicia; 
 	auta *aktualny;
 	auta *pomocny;
-	
 	scanf("%d", &pozicia);
-	//pridanie zaznamu na uplny zaciatok
+
 	if(pozicia==1)
 	{
 		pomocny=prvy;
@@ -116,16 +108,15 @@ auta *pridanie(auta *prvy, int *pocet_zaznamov)
 	    
 	    return prvy;
 	}
-	//pridanie zaznamu na nacitanu poziciu
+
 	if((pozicia>1) && (pozicia<=(*pocet_zaznamov)))
 	{
 		auta* referencia=prvy; //referencia na zaciatok
 		int ratanie=1;
-		
 		while(ratanie<pozicia-1)	//prejdenie zoznamu po n
 		{
-			prvy=prvy->dalsi;
-			ratanie++;
+		  prvy=prvy->dalsi;
+		  ratanie++;
 		}
 		pomocny=prvy->dalsi;
 		aktualny=(auta*)malloc(sizeof(auta));
@@ -135,7 +126,7 @@ auta *pridanie(auta *prvy, int *pocet_zaznamov)
 		gets(aktualny->kategoria);
 		gets(aktualny->kategoria);
 	    gets(aktualny->znacka);
-	     aktualny->znacka[strlen(aktualny->znacka)]='\n';
+	    aktualny->znacka[strlen(aktualny->znacka)]='\n';
 	    gets(aktualny->predajca);
 	    scanf("%d\n", &aktualny->cena);
 	    scanf("%d\n", &aktualny->rok_vyroby);
@@ -151,13 +142,11 @@ auta *pridanie(auta *prvy, int *pocet_zaznamov)
 	{
 		auta* referencia=prvy;
 		int ratanie=1;
-		
 		while(prvy->dalsi!=NULL)	//prejdenie az na koniec zoznamu
 		{
-			prvy=prvy->dalsi;
-			ratanie++;
+		  prvy=prvy->dalsi;
+		  ratanie++;
 		}
-		
 		aktualny=(auta*)malloc(sizeof(auta));
 		pomocny->dalsi=prvy->dalsi;
 		prvy->dalsi=pomocny;
@@ -177,7 +166,7 @@ auta *pridanie(auta *prvy, int *pocet_zaznamov)
 	    aktualny->predajca[strlen(aktualny->predajca)]='\n';
 	    aktualny->stav_vozidla[strlen(aktualny->stav_vozidla)]='\n';
 		
-	    return referencia;
+	  return referencia;
 	}		
 }
 
@@ -187,38 +176,34 @@ auta *zmazanie(auta *prvy, int *pocet_zaznamov)
 	char znaky[53];
 	scanf("%s", &znaky);
 	strlwr(znaky); //zmeni velke pismena na male
-	
-	auta *aktualny, *pomocny; //,*fall
-	//fall= NULL;
+	auta *aktualny, *pomocny; 
 	pomocny=prvy;
 	aktualny=prvy;
 	
 	while(1)
 	{
-		if(aktualny==NULL)	
-		break; 
-		
+	  if(aktualny==NULL)	
+	  break; 
 		if(strstr(strlwr(aktualny->znacka), znaky)) //porovnavanie znakov
 		{
-			if(prvy==aktualny)
-			{
-				prvy=prvy->dalsi;
-			}
+		  if(prvy==aktualny)
+		  {
+			prvy=prvy->dalsi;
+		  }
 			
-			else
-			{
-				while(pomocny->dalsi!=aktualny)
-				pomocny=pomocny->dalsi;
+		  else
+		  {
+			while(pomocny->dalsi!=aktualny)
+			  pomocny=pomocny->dalsi;
 			pomocny->dalsi=aktualny->dalsi;
-			}
-			(*pocet_zaznamov)--;  //odratavanie zo zoznamu/vypisu
-			ratanie++; //pocitanie vymazanych prvkov
+		  }
+		  (*pocet_zaznamov)--;  //odratavanie zo zoznamu/vypisu
+		  ratanie++; //pocitanie vymazanych prvkov
 		}
-		aktualny=aktualny->dalsi;
+	  aktualny=aktualny->dalsi;
 	}
-
-	printf("Vymazalo sa %d zaznamov\n", ratanie);
-	return prvy;
+  printf("Vymazalo sa %d zaznamov\n", ratanie);
+  return prvy;
 }
 
 void vypis_podla_ceny(auta *prvy) 
@@ -227,34 +212,27 @@ void vypis_podla_ceny(auta *prvy)
 	auta *aktualny;
 	auta *dalsi;
 	aktualny=prvy;
-	
 	scanf("%d", &cena);
 
 	while(aktualny->dalsi!=NULL)
-	    { 
-			if(aktualny->cena<=cena)		//podmienka ceny
-			{
-			printf("%d. \n", pocet);
-	    	printf("kategoria: %s", aktualny->kategoria);
-	    	printf("znacka: %s", aktualny->znacka);
-	    	printf("predajca: %s", aktualny->predajca);
-	   		printf("cena: %d\n", aktualny->cena);
-	   		printf("rok_vyroby: %d\n", aktualny->rok_vyroby);
-	   		printf("stav_vozidla: %s", aktualny->stav_vozidla); 
-	   		
-	   		
-	   		
-	   		pocet++;
-	    	}
-	    	
-	    	aktualny=aktualny->dalsi;
-	    }
-	    
-	    	if(pocet==1) 
-		{
-			printf("V ponuke su len auta s vyssou cenou\n");
-		}
-
+	{ 
+	  if(aktualny->cena<=cena)		//podmienka ceny
+	  {
+		printf("%d. \n", pocet);
+	    printf("kategoria: %s", aktualny->kategoria);
+	    printf("znacka: %s", aktualny->znacka);
+	    printf("predajca: %s", aktualny->predajca);
+	   	printf("cena: %d\n", aktualny->cena);
+	   	printf("rok_vyroby: %d\n", aktualny->rok_vyroby);
+	   	printf("stav_vozidla: %s", aktualny->stav_vozidla); 
+	   	pocet++;
+	  }
+	  aktualny=aktualny->dalsi;
+    }
+	if(pocet==1) 
+	  {
+		printf("V ponuke su len auta s vyssou cenou\n");
+	  }
 }
 
 int main()
@@ -265,7 +243,8 @@ int main()
 	char znak;
 	int freigeben, pocet_zaznamov;
 	
-	do {
+	do 
+	{
 		switch(znak=getchar())			
 		{
 			case 'n': prvy=nacitanie(&vstup, prvy, &pocet_zaznamov); break;
