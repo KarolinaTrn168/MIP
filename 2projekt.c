@@ -4,25 +4,25 @@
 #include<ctype.h>
 #include<conio.h>
 
-typedef struct autos{		//definovanie struktury s jednotlivymi prvkami
+typedef struct auta{		//definovanie struktury s jednotlivymi prvkami
 	char kategoria[53];
 	char znacka[53];
 	char predajca[103];
 	int cena;
 	int rok_vyroby;
 	char stav_vozidla[203];
-	struct autos *naechster;  
-} autos;
+	struct auta *dalsi;  
+} auta;
 
-autos *funkcia_n(FILE**datei, autos *anfang, int freigeben, int *t) 
+auta *nacitanie(FILE**vstup, auta *prvy, int *pocet_zaznamov) 
 {	
-	int c, anzahl=1;
-	autos *akt;
-	akt = (autos*)malloc(sizeof(autos));
-	anfang = akt;
+	int znak, pocet=1;
+	auta *aktualny;
+	aktualny=(auta*)malloc(sizeof(auta));
+	prvy=aktualny;
 	
-	*datei=fopen("auta.txt", "r");
-	if(*datei==NULL)
+	*vstup=fopen("auta.txt", "r");
+	if(*vstup==NULL)
 	{
 		printf("Zaznamy neboli nacitane \n");
 	}
@@ -32,221 +32,225 @@ autos *funkcia_n(FILE**datei, autos *anfang, int freigeben, int *t)
 	//nacitavanie so suboru a ukladanie do struktur
 	  do
 	    {   	
-			if(c=getc(*datei)=='$')
-			c=getc(*datei);
-	    	fgets(akt->kategoria, 53, *datei);
-	    	fgets(akt->znacka, 53, *datei);
-	    	fgets(akt->predajca, 103, *datei);
-	    	fscanf(*datei, "%d\n", &akt->cena);
-	    	fscanf(*datei, "%d\n", &akt->rok_vyroby);
-	    	fgets(akt->stav_vozidla, 203, *datei);
+			if(znak=getc(*vstup)=='$')
+			znak=getc(*vstup);
+	    	fgets(aktualny->kategoria, 53, *vstup);
+	    	fgets(aktualny->znacka, 53, *vstup);
+	    	fgets(aktualny->predajca, 103, *vstup);
+	    	fscanf(*vstup, "%d\n", &aktualny->cena);
+	    	fscanf(*vstup, "%d\n", &aktualny->rok_vyroby);
+	    	fgets(aktualny->stav_vozidla, 203, *vstup);
 	    	
-	    	akt->naechster=(autos*)malloc(sizeof(autos));
-	    	akt = akt->naechster;
-	    	akt->naechster=NULL;
-	    	anzahl++;  //pocitanie jednotlivych struktur
+	    	aktualny->dalsi=(auta*)malloc(sizeof(auta));
+	    	aktualny=aktualny->dalsi;
+	    	aktualny->dalsi=NULL;
+	    	pocet++;  //pocitanie jednotlivych struktur
 	    		
 	    }
-	    while(!feof(*datei));
-	    fclose(*datei);
+	    while(!feof(*vstup));
+	    fclose(*vstup);
 	    
-	    akt = NULL;
+	    aktualny=NULL;
 	    
-	    *t=anzahl-1; 
+	    *pocet_zaznamov=pocet-1; 
 	    
-	printf("Nacitalo sa %d zaznamov \n", *t);
+	printf("Nacitalo sa %d zaznamov \n", *pocet_zaznamov);
 	}
-	return anfang; 
+	return prvy; 
 }
 
-void vypisanie(autos *anfang) 
+void vypisanie(auta *prvy) 
 {
-	int anzahl=1;
-	autos *akt;
-	autos *naechster;
-	akt=anfang;
+	int pocet=1;
+	auta *aktualny;
+	auta *dalsi;
+	aktualny=prvy;
 //vypis vsetkych struktur
-	while(akt->naechster != NULL)
+	while(aktualny->dalsi!=NULL)
 	    { 
-			printf("%d. \n", anzahl);
-	    	printf("kategoria: %s", akt->kategoria);
-	    	printf("znacka: %s", akt->znacka);
-	    	printf("predajca: %s", akt->predajca);
-	   		printf("cena: %d\n", akt->cena);
-	   		printf("rok_vyroby: %d\n", akt->rok_vyroby);
-	   		printf("stav_vozidla: %s", akt->stav_vozidla); 
+	printf("%d. \n", pocet);
+	    	printf("kategoria: %s", aktualny->kategoria);
+	    	printf("znacka: %s", aktualny->znacka);
+	    	printf("predajca: %s", aktualny->predajca);
+	   		printf("cena: %d\n", aktualny->cena);
+	   		printf("rok_vyroby: %d\n", aktualny->rok_vyroby);
+	   		printf("stav_vozidla: %s", aktualny->stav_vozidla); 
+	   		
+	   	
 	    	
 	    	
-	    	akt = akt->naechster;
-	    	anzahl++; //pocitanie struktur
+	    	aktualny=aktualny->dalsi;
+	    	pocet++; //pocitanie struktur
 	    }
 	    putchar('\n');
 }
 
 
-autos *pridanie(autos *anfang, int *t)
+auta *pridanie(auta *prvy, int *pocet_zaznamov)
 {
-	int n; 
-	autos *akt;
-	autos *neu;
-	autos *vor;
+	int pozicia; 
+	auta *aktualny;
+	auta *pomocny;
 	
-	scanf("%d", &n);
+	scanf("%d", &pozicia);
 	//pridanie zaznamu na uplny zaciatok
-	if(n==1)
+	if(pozicia==1)
 	{
-		neu=anfang;
-		akt=(autos*)malloc(sizeof(autos));
-		anfang=akt;
-		akt->naechster=neu;
+		pomocny=prvy;
+		aktualny=(auta*)malloc(sizeof(auta));
+		prvy=aktualny;
+		aktualny->dalsi=pomocny;
 		
-		gets(akt->kategoria);
-		gets(akt->kategoria);
-	    gets(akt->znacka);
-	    akt->znacka[strlen(akt->znacka)] = '\n';
-	    gets(akt->predajca);
-	    scanf("%d\n", &akt->cena);
-	    scanf("%d\n", &akt->rok_vyroby);
-	    gets(akt->stav_vozidla);
+		gets(aktualny->kategoria);
+		gets(aktualny->kategoria);
+	    gets(aktualny->znacka);
+	    aktualny->znacka[strlen(aktualny->znacka)]='\n';
+	    gets(aktualny->predajca);
+	    scanf("%d\n", &aktualny->cena);
+	    scanf("%d\n", &aktualny->rok_vyroby);
+	    gets(aktualny->stav_vozidla);
 	    //odriadkovavanie (donutene)
-	    akt->kategoria[strlen(akt->kategoria)] = '\n';
-	  	akt->predajca[strlen(akt->predajca)] = '\n';
-	    akt->stav_vozidla[strlen(akt->stav_vozidla)] = '\n';
+	    aktualny->kategoria[strlen(aktualny->kategoria)]='\n';
+	  	aktualny->predajca[strlen(aktualny->predajca)]='\n';
+	    aktualny->stav_vozidla[strlen(aktualny->stav_vozidla)]='\n';
 	    
-	    return anfang;
+	    return prvy;
 	}
 	//pridanie zaznamu na nacitanu poziciu
-	if((n>1) && (n<=(*t)))
+	if((pozicia>1) && (pozicia<=(*pocet_zaznamov)))
 	{
-		autos* ref = anfang; //referencia na zaciatok
-		int iterator = 1;
+		auta* referencia=prvy; //referencia na zaciatok
+		int ratanie=1;
 		
-		while(iterator<n-1)	//prejdenie zoznamu po n
+		while(ratanie<pozicia-1)	//prejdenie zoznamu po n
 		{
-			anfang = anfang->naechster;
-			iterator++;
+			prvy=prvy->dalsi;
+			ratanie++;
 		}
-		neu=anfang->naechster;
-		akt=(autos*)malloc(sizeof(autos));
-		anfang->naechster = akt;
-		akt->naechster=neu;
+		pomocny=prvy->dalsi;
+		aktualny=(auta*)malloc(sizeof(auta));
+		prvy->dalsi=aktualny;
+		aktualny->dalsi=pomocny;
 		
-		gets(akt->kategoria);
-		gets(akt->kategoria);
-	    gets(akt->znacka);
-	    gets(akt->predajca);
-	    scanf("%d\n", &akt->cena);
-	    scanf("%d\n", &akt->rok_vyroby);
-	    gets(akt->stav_vozidla);
+		gets(aktualny->kategoria);
+		gets(aktualny->kategoria);
+	    gets(aktualny->znacka);
+	    gets(aktualny->predajca);
+	    scanf("%d\n", &aktualny->cena);
+	    scanf("%d\n", &aktualny->rok_vyroby);
+	    gets(aktualny->stav_vozidla);
 	    
-	    akt->kategoria[strlen(akt->kategoria)] = '\n';
-	    akt->znacka[strlen(akt->znacka)] = '\n';
-	  	akt->predajca[strlen(akt->predajca)] = '\n';
-	    akt->stav_vozidla[strlen(akt->stav_vozidla)] = '\n';
-	    return ref;
+	    aktualny->kategoria[strlen(aktualny->kategoria)]='\n';
+	    aktualny->znacka[strlen(aktualny->znacka)]='\n';
+	  	aktualny->predajca[strlen(aktualny->predajca)]='\n';
+	    aktualny->stav_vozidla[strlen(aktualny->stav_vozidla)] = '\n';
+	    return referencia;
 	}
 	
 	else //ak je n vyzsie ako pocet zaznamov - pridavanie na koniec 
 	{
-		autos* ref = anfang;
-		int iterator = 1;
+		auta* referencia=prvy;
+		int ratanie=1;
 		
-		while(anfang->naechster!=NULL)	//prejdenie az na koniec zoznamu
+		while(prvy->dalsi!=NULL)	//prejdenie az na koniec zoznamu
 		{
-			anfang = anfang->naechster;
-			iterator++;
+			prvy=prvy->dalsi;
+			ratanie++;
 		}
 		
-		akt=(autos*)malloc(sizeof(autos));
-		neu->naechster=anfang->naechster;
-		anfang->naechster = neu;
-		anfang=neu;
-		anfang->naechster=NULL;
+		aktualny=(auta*)malloc(sizeof(auta));
+		pomocny->dalsi=prvy->dalsi;
+		prvy->dalsi=pomocny;
+		prvy=pomocny;
+		prvy->dalsi=NULL;
 			
-		gets(akt->kategoria);
-		gets(akt->kategoria);
-	    gets(akt->znacka);
-	    akt->znacka[strlen(akt->znacka)] = '\n';
-	    gets(akt->predajca);
-	    scanf("%d\n", &akt->cena);
-		scanf("%d\n", &akt->rok_vyroby);
-	    gets(akt->stav_vozidla);
+		gets(aktualny->kategoria);
+		gets(aktualny->kategoria);
+	    gets(aktualny->znacka);
+	    aktualny->znacka[strlen(aktualny->znacka)]='\n';
+	    gets(aktualny->predajca);
+	    scanf("%d\n", &aktualny->cena);
+		scanf("%d\n", &aktualny->rok_vyroby);
+	    gets(aktualny->stav_vozidla);
 	    
-	    akt->kategoria[strlen(akt->kategoria)] = '\n';
-	    akt->predajca[strlen(akt->predajca)] = '\n';
-	    akt->stav_vozidla[strlen(akt->stav_vozidla)] = '\n';
+	    aktualny->kategoria[strlen(aktualny->kategoria)]='\n';
+	    aktualny->predajca[strlen(aktualny->predajca)]='\n';
+	    aktualny->stav_vozidla[strlen(aktualny->stav_vozidla)]='\n';
 		
-	    return ref;
+	    return referencia;
 	}		
 }
 
-autos *funkcia_z(autos *anfang, int *t)
+auta *zmazanie(auta *prvy, int *pocet_zaznamov)
 {
-	int anzahl=0;
-	char zeichen[53];
-	scanf("%s", &zeichen);
-	strlwr(zeichen); //zmeni velke pismena na male
+	int ratanie=0;
+	char znaky[53];
+	scanf("%s", &znaky);
+	strlwr(znaky); //zmeni velke pismena na male
 	
-	autos *akt, *fall, *hilf;
-	fall= NULL;
-	hilf=anfang;
-	akt=anfang;
+	auta *aktualny, *pomocny; //,*fall
+	//fall= NULL;
+	pomocny=prvy;
+	aktualny=prvy;
 	
 	while(1)
 	{
-		if(akt->naechster==NULL)	
+		if(aktualny->dalsi==NULL)	
 		break; 
 		
-		if(strstr(strlwr(akt->znacka), zeichen)) //porovnavanie znakov
+		if(strstr(strlwr(aktualny->znacka), znaky)) //porovnavanie znakov
 		{
-			if(anfang==akt)
+			if(prvy==aktualny)
 			{
-				anfang=anfang->naechster;
+				prvy=prvy->dalsi;
 			}
 			
 			else
 			{
-				while(hilf->naechster!=akt)
-				hilf=hilf->naechster;
-			hilf->naechster = akt->naechster;
+				while(pomocny->dalsi!=aktualny)
+				pomocny=pomocny->dalsi;
+			pomocny->dalsi=aktualny->dalsi;
 			}
-			(*t)--;  //odratavanie zo zoznamu/vypisu
-			anzahl++; //pocitanie vymazanych prvkov
+			(*pocet_zaznamov)--;  //odratavanie zo zoznamu/vypisu
+			ratanie++; //pocitanie vymazanych prvkov
 		}
-		akt=akt->naechster;
+		aktualny=aktualny->dalsi;
 	}
 
-	printf("Vymazalo sa %d zaznamov\n", anzahl);
-	return anfang;
+	printf("Vymazalo sa %d zaznamov\n", ratanie);
+	return prvy;
 }
 
-void funkcia_h(autos *anfang) 
+void vypis_podla_ceny(auta *prvy) 
 {
-	int preis, anzahl=1;
-	autos *akt;
-	autos *naechster;
-	akt=anfang;
+	int cena, pocet=1;
+	auta *aktualny;
+	auta *dalsi;
+	aktualny=prvy;
 	
-	scanf("%d", &preis);
+	scanf("%d", &cena);
 
-	while(akt->naechster != NULL)
+	while(aktualny->dalsi!=NULL)
 	    { 
-			if(akt->cena <= preis)		//podmienka ceny
+			if(aktualny->cena<=cena)		//podmienka ceny
 			{
-			printf("%d. \n", anzahl);
-	    	printf("kategoria: %s", akt->kategoria);
-	    	printf("znacka: %s", akt->znacka);
-	    	printf("predajca: %s", akt->predajca);
-	   		printf("cena: %d\n", akt->cena);
-	   		printf("rok_vyroby: %d\n", akt->rok_vyroby);
-	   		printf("stav_vozidla: %s", akt->stav_vozidla); 
-	   		anzahl++;
+			printf("%d. \n", pocet);
+	    	printf("kategoria: %s", aktualny->kategoria);
+	    	printf("znacka: %s", aktualny->znacka);
+	    	printf("predajca: %s", aktualny->predajca);
+	   		printf("cena: %d\n", aktualny->cena);
+	   		printf("rok_vyroby: %d\n", aktualny->rok_vyroby);
+	   		printf("stav_vozidla: %s", aktualny->stav_vozidla); 
+	   		
+	   		
+	   		
+	   		pocet++;
 	    	}
 	    	
-	    	akt = akt->naechster;
+	    	aktualny=aktualny->dalsi;
 	    }
 	    
-	    	if(anzahl==1) 
+	    	if(pocet==1) 
 		{
 			printf("V ponuke su len auta s vyssou cenou\n");
 		}
@@ -255,21 +259,21 @@ void funkcia_h(autos *anfang)
 
 int main()
 {
-	FILE *datei;
-	autos *anfang;
-	autos *akt;
-	char a;
-	int freigeben, t;
+	FILE *vstup;
+	auta *prvy;
+	auta *aktualny;
+	char znak;
+	int freigeben, pocet_zaznamov;
 	
 	do {
-		switch(a=getchar())			
+		switch(znak=getchar())			
 		{
-			case 'n': anfang = funkcia_n(&datei, anfang, freigeben, &t); freigeben=1; break;
-			case 'v': vypisanie(anfang); break;
-			case 'p': anfang = pridanie(anfang, &t); break;
-			case 'z': anfang = funkcia_z(anfang,&t); break;
-			case 'h': funkcia_h(anfang); break;
+			case 'n': prvy=nacitanie(&vstup, prvy, &pocet_zaznamov); break;
+			case 'v': vypisanie(prvy); break;
+			case 'p': prvy=pridanie(prvy, &pocet_zaznamov); break;
+			case 'z': prvy=zmazanie(prvy,&pocet_zaznamov); break;
+			case 'h': vypis_podla_ceny(prvy); break;
 		}
 	}
-	while(a != 'k');
+	while(znak!='k');
 }
