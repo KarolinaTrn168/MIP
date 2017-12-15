@@ -135,13 +135,13 @@ auta *pridanie(auta *prvy, int *pocet_zaznamov)
 		gets(aktualny->kategoria);
 		gets(aktualny->kategoria);
 	    gets(aktualny->znacka);
+	     aktualny->znacka[strlen(aktualny->znacka)]='\n';
 	    gets(aktualny->predajca);
 	    scanf("%d\n", &aktualny->cena);
 	    scanf("%d\n", &aktualny->rok_vyroby);
 	    gets(aktualny->stav_vozidla);
 	    
 	    aktualny->kategoria[strlen(aktualny->kategoria)]='\n';
-	    aktualny->znacka[strlen(aktualny->znacka)]='\n';
 	  	aktualny->predajca[strlen(aktualny->predajca)]='\n';
 	    aktualny->stav_vozidla[strlen(aktualny->stav_vozidla)] = '\n';
 	    return referencia;
@@ -195,7 +195,7 @@ auta *zmazanie(auta *prvy, int *pocet_zaznamov)
 	
 	while(1)
 	{
-		if(aktualny->dalsi==NULL)	
+		if(aktualny==NULL)	
 		break; 
 		
 		if(strstr(strlwr(aktualny->znacka), znaky)) //porovnavanie znakov
